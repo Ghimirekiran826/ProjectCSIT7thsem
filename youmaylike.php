@@ -38,6 +38,7 @@
                 }
 
                 // Fetch all products as an array
+                //updated
                 $related_products = [];
                 while ($product = mysqli_fetch_assoc($products_result)) {
                     $related_products[] = $product;
