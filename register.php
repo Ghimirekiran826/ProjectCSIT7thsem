@@ -1,0 +1,33 @@
+<?php
+include_once('connect.php');
+
+#collect data from register form
+// $a = $_Method['name of field'];
+$fn = $_POST['fn'];
+$type = $_POST['type']; // sel = seller, buy = buyer
+$address = $_POST['address'];
+$phone = $_POST['phone'];
+$gender = $_POST['gender'];
+$email = $_POST['email'];
+$password = $_POST['password'];
+$currentDateTime = date('Y-m-d H:i:s');
+
+/**
+ * this query is not wroking 
+ */
+#$sql = "INSERT into users values('', '$fn', '$type', '$address', '$phone', '$gender', '$email','', '$password',0,'$currentDateTime')";
+
+/**
+ * updated query by Pabitra
+ */
+$sql = "INSERT INTO users (name, type, address, phone, gender, email, avatar, password, verified_user, reg_date) 
+        VALUES ('$fn', '$type', '$address', '$phone', '$gender', '$email', '', '$password', 0, '$currentDateTime')";
+
+$insert = mysqli_query($con, $sql); // run query mysqli_query(connection_variable, query_variable);
+
+if (!$insert) {
+    echo "failed";
+} else {
+    // echo "okay inserted!";
+    header('location: login.html');
+}

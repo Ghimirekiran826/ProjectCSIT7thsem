@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login to Thriftonic</title>
+    <link rel="stylesheet" href="login.css">
+</head>
+<body style="margin: 0; padding: 0; font-family: Arial, sans-serif;">
+
+    <!-- Hero Section -->
+    <div class="hero" style="background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('./images/bg.jpg'); height: 100vh; display: flex; justify-content: center; align-items: center;">
+        <div class="form-box">
+            <div class="button-box">
+                <div id="btn"></div>
+                <button type="button" class="toggle-btn" onclick="login()">Log In</button>
+                <button type="button" class="toggle-btn" onclick="register()">Register</button>
+            </div>
+
+            <!-- Display Error Messages -->
+            <div id="error-message" style="color: red; text-align: center; margin-bottom: 10px;">
+                <?php
+                session_start();
+                if (isset($_SESSION['login_error'])) {
+                    echo $_SESSION['login_error'];
+                    unset($_SESSION['login_error']);
+                }
+                if (isset($_SESSION['register_error'])) {
+                    echo $_SESSION['register_error'];
+                    unset($_SESSION['register_error']);
+                }
+                ?>
+            </div>
+
+            <!-- Login Form -->
+            <form action="login.php" method="post" id="login" class="input-group" style="position: absolute; top: 120px; left: 50px;">
+                <input type="text" name="email" class="input-field" placeholder="Email" required>
+                <input type="password" name="password" class="input-field" placeholder="Enter Password" required>
+                <!-- <input type="hidden" name="cart_item" id="offline_cart_items"> -->
+                <input type="checkbox" class="checkbox"><span>Remember Password</span>
+                <button type="submit" class="submit-btn">Log In</button>
+            </form>
+
+            <!-- Registration Form -->
+            <form id="register" class="input-group" action="register.php" method="post" style="position: absolute; top: 120px; left: 450px;">
+                <input type="text" name="fn" id="fn" class="input-field" placeholder="Full Name*" onkeyup="validateFullName()" required>
+                <span id="full-name-error"></span>
+                <select name="type" id="type" class="input-field" required>
+                    <option value="0">--Buyer--</option>
+                    <option value="seller">--Seller--</option>
+                </select>
+                <div class="gender" id="gender">
+                    <input type="radio" id="male" name="gender" value="M" required>
+                    <label for="male">Male</label>
+                    <input type="radio" id="female" name="gender" value="F" required>
+                    <label for="female">Female</label>
+                    <input type="radio" id="other" name="gender" value="O" required>
+                    <label for="other">Other</label><br>
+                </div>
+                <input type="email" name="email" id="email" class="input-field" placeholder="Email*" onkeyup="validateEmail()" required>
+                <span id="email-error" class="error-message"></span>
+                <input type="text" name="address" class="input-field" placeholder="Address*" required>
+                <input type="password" name="password" id="password" class="input-field" placeholder="Password*" required>
+                <input type="text" name="phone" id="phone" class="input-field" placeholder="Phone Number (10 digits)*" onkeyup="validatePhoneNumber()" pattern="[0-9]{10}" required>
+                <span id="phone-number-error"></span>
+                <button type="submit" class="submit-btn">Register</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- JavaScript for Toggling Forms -->
+    <script>
+        var x = document.getElementById("login");
+        var y = document.getElementById("register");
+        var z = document.getElementById("btn");
+
+        function register() {
+            x.style.left = "-400px";
+            y.style.left = "50px";
+            z.style.left = "110px";
+        }
+
+        function login() {
+            x.style.left = "50px";
+            y.style.left = "450px";
+            z.style.left = "0px";
+        }
+    </script>
+
+    <!-- JavaScript for Handling Cart Items -->
+    <script>
+        // Send cart items while logging in, store them in the cart table after login
+        var cart = document.getElementById('offline_cart_items');
+        var cart_items = localStorage.getItem('thrift_cart') || '';
+        cart.setAttribute('value', cart_items);
+    </script>
+
+    <!-- JavaScript for Validation -->
+    <script>
+        function validateFullName() {
+            const fullName = document.getElementById("fn").value;
+            const fullNameError = document.getElementById("full-name-error");
+            if (fullName.length < 3) {
+                fullNameError.innerHTML = "Full name must be at least 3 characters long";
+                fullNameError.style.color = "red";
+            } else {
+                fullNameError.innerHTML = "";
+            }
+        }
+
+        function validateEmail() {
+            const email = document.getElementById("email").value;
+            const emailError = document.getElementById("email-error");
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                emailError.innerHTML = "Invalid email address";
+                emailError.style.color = "red";
+            } else {
+                emailError.innerHTML = "";
+            }
+        }
+
+        function validatePhoneNumber() {
+            const phoneNumber = document.getElementById("phone").value;
+            const phoneNumberError = document.getElementById("phone-number-error");
+            const phoneNumberRegex = /^\d{10}$/;
+            if (!phoneNumberRegex.test(phoneNumber)) {
+                phoneNumberError.innerHTML = "Phone number must be 10 digits long";
+                phoneNumberError.style.color = "red";
+            } else {
+                phoneNumberError.innerHTML = "";
+            }
+        }
+    </script>
+</body>
+</html>
